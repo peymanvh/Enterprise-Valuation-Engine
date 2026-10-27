@@ -36,6 +36,10 @@ class TestMcKinseyDCFEngine(unittest.TestCase):
                 "terminal_growth_rate": 0.02,
                 "terminal_roic": 0.15,
                 "long_term_gdp_growth": 0.03,
+                "risk_free_rate": 0.04,
+                "discounting_convention": "end_of_year",
+                "economic_moat": "wide",
+                "margin_of_safety": 0.25,
                 "probability_of_distress": 0.05,
                 "distress_liquidation_recovery_rate": 0.40
             },
@@ -98,6 +102,20 @@ class TestMcKinseyDCFEngine(unittest.TestCase):
         expected_equity = adj_ev + 100.0 + 50.0 - 300.0 - 50.0 - 20.0 - 10.0 - 15.0
         self.assertAlmostEqual(res["equity_value"], expected_equity, places=2)
         self.assertAlmostEqual(res["equity_value_per_share"], expected_equity / 100.0, places=2)
+
+    def test_buffett_moat_fade_and_margin_of_safety(self):
+        # Test zero moat: terminal ROIC must collapse to WACC
+        no_moat_data = dict(self.sample_data)
+        no_moat_data["assumptions"] = dict(self.sample_data["assumptions"])
+        no_moat_data["assumptions"]["economic_moat"] = "none"
+        engine_no_moat = McKinseyDCFEngine(no_moat_data)
+        res = engine_no_moat.run_valuation()
+        self.assertAlmostEqual(res["terminal_roic"], res["wacc"], places=4)
+        
+        # Verify Margin of Safety discount (25%)
+        b_metrics = res["buffett_owner_earnings_metrics"]
+        self.assertAlmostEqual(b_metrics["margin_of_safety_percentage"], 0.25, places=2)
+        self.assertAlmostEqual(b_metrics["buffett_margin_of_safety_equity_value"], res["equity_value"] * 0.75, places=2)
 
 class TestMultiplesEngine(unittest.TestCase):
     def test_harmonic_mean(self):

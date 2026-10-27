@@ -140,22 +140,32 @@ class CommercialProjectEngine:
             interest = float(p.get("debt_interest_payment", debt_balance * self.cost_of_debt if debt_balance > 0 else 0.0))
             debt_service = principal + interest
             
-            # DSCR
+            # Bankability & Cash Sweep / Dividend Lockup Mechanism
+            # In institutional project finance, if DSCR < covenant, lenders trigger dividend lockup
+            min_covenant_dscr = self.covenants.get("min_dscr", 1.30)
+            dividend_lockup = False
+            cash_sweep_amount = 0.0
+
             if debt_service > 0:
                 dscr = cfads / debt_service
                 dscr_list.append(dscr)
-                if dscr < self.covenants["min_dscr"]:
+                if dscr < min_covenant_dscr:
+                    dividend_lockup = True
+                    excess_over_service = max(cfads - debt_service, 0.0)
+                    cash_sweep_amount = excess_over_service  # 100% swept to reserve or debt prepayment
                     self.warnings.append(
-                        f"Year {t}: DSCR ({dscr:.2f}x) breaches minimum bank covenant threshold ({self.covenants['min_dscr']:.2f}x)."
+                        f"Year {t}: DSCR ({dscr:.2f}x) breaches bank covenant ({min_covenant_dscr:.2f}x). "
+                        "LENDER COVENANT TRIGGERED: Mandatory Dividend Lockup enforced. 100% of excess cash swept to Debt Service Reserve."
                     )
             else:
                 dscr = None
 
-            # Free Cash Flow to Equity (FCFE): CFADS - Debt Service
-            fcfe = cfads - debt_service
+            # Distributable Free Cash Flow to Equity (FCFE):
+            raw_fcfe = cfads - debt_service
+            distributable_fcfe = 0.0 if dividend_lockup else max(raw_fcfe, 0.0)
             
             project_cfs.append(cfads)
-            equity_cfs.append(fcfe)
+            equity_cfs.append(distributable_fcfe if not dividend_lockup else min(raw_fcfe, 0.0))
 
             period_evaluations.append({
                 "year": t,
@@ -169,11 +179,14 @@ class CommercialProjectEngine:
                 "principal": principal,
                 "interest": interest,
                 "dscr": dscr,
-                "fcfe": fcfe,
+                "raw_fcfe": raw_fcfe,
+                "dividend_lockup": dividend_lockup,
+                "cash_sweep_amount": cash_sweep_amount,
+                "distributable_fcfe": distributable_fcfe,
                 "opening_debt": debt_balance,
-                "closing_debt": max(debt_balance - principal, 0.0)
+                "closing_debt": max(debt_balance - principal - cash_sweep_amount, 0.0)
             })
-            debt_balance = max(debt_balance - principal, 0.0)
+            debt_balance = max(debt_balance - principal - cash_sweep_amount, 0.0)
 
         # Loan Life Coverage Ratio (LLCR) and Project Life Coverage Ratio (PLCR)
         # LLCR = NPV of CFADS over loan life / Outstanding Debt

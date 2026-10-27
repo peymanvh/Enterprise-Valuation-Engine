@@ -21,6 +21,8 @@ class PeriodForecast:
     depreciation_amortization: float
     capex: float
     change_in_nwc: float
+    maintenance_capex: Optional[float] = None
+    stock_based_compensation: float = 0.0
     invested_capital: Optional[float] = None
 
 @dataclass
@@ -33,6 +35,10 @@ class ValuationAssumptions:
     terminal_growth_rate: float  # g
     terminal_roic: Optional[float] = None
     long_term_gdp_growth: float = 0.03
+    risk_free_rate: float = 0.04
+    discounting_convention: str = "mid_year"  # "mid_year" (McKinsey standard) or "end_of_year"
+    economic_moat: str = "narrow"  # "wide", "narrow", "none" (Buffett Moat classification)
+    margin_of_safety: float = 0.25  # Buffett 25% Margin of Safety discount
     probability_of_distress: float = 0.0
     distress_liquidation_recovery_rate: float = 0.40  # % of book value or invested capital recovered
 
@@ -68,6 +74,10 @@ class McKinseyDCFEngine:
             terminal_growth_rate=float(raw.get("terminal_growth_rate", 0.025)),
             terminal_roic=float(raw["terminal_roic"]) if "terminal_roic" in raw and raw["terminal_roic"] is not None else None,
             long_term_gdp_growth=float(raw.get("long_term_gdp_growth", 0.03)),
+            risk_free_rate=float(raw.get("risk_free_rate", 0.04)),
+            discounting_convention=str(raw.get("discounting_convention", "mid_year")).lower(),
+            economic_moat=str(raw.get("economic_moat", "narrow")).lower(),
+            margin_of_safety=float(raw.get("margin_of_safety", 0.25)),
             probability_of_distress=float(raw.get("probability_of_distress", 0.0)),
             distress_liquidation_recovery_rate=float(raw.get("distress_liquidation_recovery_rate", 0.40))
         )
@@ -95,6 +105,8 @@ class McKinseyDCFEngine:
                 depreciation_amortization=float(item.get("depreciation_amortization", 0.0)),
                 capex=float(item.get("capex", 0.0)),
                 change_in_nwc=float(item.get("change_in_nwc", 0.0)),
+                maintenance_capex=float(item["maintenance_capex"]) if "maintenance_capex" in item and item["maintenance_capex"] is not None else None,
+                stock_based_compensation=float(item.get("stock_based_compensation", 0.0)),
                 invested_capital=float(item["invested_capital"]) if "invested_capital" in item and item["invested_capital"] is not None else None
             ))
         return periods
@@ -125,6 +137,11 @@ class McKinseyDCFEngine:
         # Sanity Checks
         if g >= wacc:
             raise ValueError(f"Terminal growth rate ({g:.2%}) cannot be greater than or equal to WACC ({wacc:.2%}).")
+        if g > self.assumptions.risk_free_rate:
+            self.sanity_warnings.append(
+                f"Terminal growth rate ({g:.2%}) exceeds the risk-free rate ({self.assumptions.risk_free_rate:.2%}). "
+                "Per Damodaran's Golden Rule of Valuation, no firm can grow faster than the risk-free rate in perpetuity without becoming larger than the entire economy."
+            )
         if g > self.assumptions.long_term_gdp_growth:
             self.sanity_warnings.append(
                 f"Terminal growth rate ({g:.2%}) exceeds projected long-term GDP growth ({self.assumptions.long_term_gdp_growth:.2%}). "
@@ -135,18 +152,27 @@ class McKinseyDCFEngine:
         period_results = []
         cumulative_pv_fcff = 0.0
         cumulative_pv_ep = 0.0
+        total_owner_earnings = 0.0
         
         prev_ic = self.initial_invested_capital
+        is_mid_year = self.assumptions.discounting_convention == "mid_year"
         
         for idx, p in enumerate(self.forecasts):
             t = idx + 1
             nopat = p.ebit * (1.0 - p.tax_rate)
-            # FCFF = NOPAT + D&A - Capex - Change in NWC
-            # Alternatively: FCFF = NOPAT - Net Investment
+            # FCFF = NOPAT + D&A - Capex - Change in NWC - Stock-Based Compensation
             net_investment = (p.capex - p.depreciation_amortization) + p.change_in_nwc
-            fcff = nopat - net_investment
+            fcff = nopat - net_investment - p.stock_based_compensation
             
-            discount_factor = 1.0 / math.pow(1.0 + wacc, t)
+            # Buffett Owner Earnings: NOPAT + D&A - Maintenance Capex - Change in NWC - SBC
+            maint_capex = p.maintenance_capex if p.maintenance_capex is not None else min(p.capex, p.depreciation_amortization)
+            growth_capex = max(p.capex - maint_capex, 0.0)
+            owner_earnings = nopat + p.depreciation_amortization - maint_capex - p.change_in_nwc - p.stock_based_compensation
+            total_owner_earnings += owner_earnings
+
+            # Discount Factor (Mid-Year vs End-of-Year)
+            discount_power = (t - 0.5) if is_mid_year else float(t)
+            discount_factor = 1.0 / math.pow(1.0 + wacc, discount_power)
             pv_fcff = fcff * discount_factor
             cumulative_pv_fcff += pv_fcff
             
@@ -174,9 +200,13 @@ class McKinseyDCFEngine:
                 "nopat": nopat,
                 "depreciation_amortization": p.depreciation_amortization,
                 "capex": p.capex,
+                "maintenance_capex": maint_capex,
+                "growth_capex": growth_capex,
+                "stock_based_compensation": p.stock_based_compensation,
                 "change_in_nwc": p.change_in_nwc,
                 "net_investment": net_investment,
                 "fcff": fcff,
+                "owner_earnings": owner_earnings,
                 "invested_capital": ic,
                 "roic": roic,
                 "economic_profit": economic_profit,
@@ -186,19 +216,34 @@ class McKinseyDCFEngine:
             })
             prev_ic = ic
 
-        # Terminal Value Calculation (McKinsey Key Value Driver Formula)
+        # Terminal Value Calculation (McKinsey Key Value Driver Formula & Buffett Moat Fade)
         last_forecast = period_results[-1]
         nopat_terminal_base = last_forecast["nopat"] * (1.0 + g)
         
-        terminal_roic = self.assumptions.terminal_roic
-        if terminal_roic is None:
-            terminal_roic = last_forecast["roic"] if last_forecast["roic"] > 0 else wacc
-            
-        if terminal_roic > (wacc + 0.10):
+        raw_terminal_roic = self.assumptions.terminal_roic
+        if raw_terminal_roic is None:
+            raw_terminal_roic = last_forecast["roic"] if last_forecast["roic"] > 0 else wacc
+
+        # Buffett Moat Durability Adjustment
+        moat = self.assumptions.economic_moat
+        if moat == "none":
+            terminal_roic = wacc
             self.sanity_warnings.append(
-                f"Terminal ROIC ({terminal_roic:.2%}) significantly exceeds WACC ({wacc:.2%}) by >10%. "
-                "Per McKinsey Ch. 12, competitive forces erode excess returns in perpetuity unless an insurmountable economic moat is proven."
+                f"Buffett Moat Rating = 'NONE': Terminal ROIC faded from {raw_terminal_roic:.1%} directly to WACC ({wacc:.1%}). "
+                "Without a defensible competitive moat, free-market competition erodes all excess returns."
             )
+        elif moat == "narrow":
+            terminal_roic = wacc + 0.50 * max(raw_terminal_roic - wacc, 0.0)
+            self.sanity_warnings.append(
+                f"Buffett Moat Rating = 'NARROW': Terminal ROIC adjusted to {terminal_roic:.1%} (50% fade toward WACC {wacc:.1%}) to reflect medium-term competitive decay."
+            )
+        else:  # wide moat
+            terminal_roic = raw_terminal_roic
+            if terminal_roic > (wacc + 0.12):
+                self.sanity_warnings.append(
+                    f"Buffett Moat Rating = 'WIDE': Terminal ROIC ({terminal_roic:.1%}) exceeds WACC by >12%. "
+                    "Ensure high pricing power, patents, or insurmountable network effects justify this premium."
+                )
 
         # Key Value Driver: Value = NOPAT * (1 - g/ROIC) / (WACC - g)
         investment_rate_terminal = (g / terminal_roic) if terminal_roic > 0 else 0.0
@@ -220,7 +265,6 @@ class McKinseyDCFEngine:
         ev_going_concern = cumulative_pv_fcff + pv_terminal_value
         
         # Economic Profit (EVA) Valuation Model Reconciliation:
-        # EV = Initial Invested Capital + PV(Discrete EP) + PV(Terminal EP)
         terminal_ep = (nopat_terminal_base - (last_forecast["invested_capital"] * (1.0 + g) * wacc))
         terminal_ep_value = terminal_ep / (wacc - g) if (wacc - g) > 0 else 0.0
         pv_terminal_ep = terminal_ep_value * terminal_discount_factor
@@ -233,7 +277,6 @@ class McKinseyDCFEngine:
         adjusted_ev = (ev_going_concern * (1.0 - p_distress)) + (liquidation_value * p_distress)
 
         # Equity Value Bridge
-        # Equity = EV + Cash/Marketable Securities + Non-operating assets - Debt - Leases - Pensions - Litigation - Minority Interest
         debt_equivalents = (
             self.bridge.operating_lease_liabilities +
             self.bridge.pension_deficits +
@@ -252,10 +295,19 @@ class McKinseyDCFEngine:
         shares = max(self.bridge.shares_outstanding, 0.0001)
         equity_value_per_share = equity_value / shares
 
+        # Buffett Margin of Safety & Owner Earnings Yield
+        mos = self.assumptions.margin_of_safety
+        buffett_safe_equity_value = equity_value * (1.0 - mos)
+        buffett_safe_entry_price = buffett_safe_equity_value / shares
+        avg_owner_earnings = total_owner_earnings / len(self.forecasts) if self.forecasts else 0.0
+        owner_earnings_yield = (avg_owner_earnings / adjusted_ev) if adjusted_ev > 0 else 0.0
+
         return {
             "company_name": self.company_name,
             "currency": self.currency,
             "wacc": wacc,
+            "discounting_convention": self.assumptions.discounting_convention,
+            "economic_moat": self.assumptions.economic_moat,
             "terminal_growth_rate": g,
             "terminal_roic": terminal_roic,
             "terminal_value": terminal_value,
@@ -276,6 +328,13 @@ class McKinseyDCFEngine:
             "equity_value": equity_value,
             "shares_outstanding": shares,
             "equity_value_per_share": equity_value_per_share,
+            "buffett_owner_earnings_metrics": {
+                "average_owner_earnings": avg_owner_earnings,
+                "owner_earnings_yield": owner_earnings_yield,
+                "margin_of_safety_percentage": mos,
+                "buffett_margin_of_safety_equity_value": buffett_safe_equity_value,
+                "buffett_safe_entry_share_price": buffett_safe_entry_price
+            },
             "forecast_periods": period_results,
             "sanity_warnings": self.sanity_warnings
         }
@@ -283,8 +342,9 @@ class McKinseyDCFEngine:
     def generate_markdown_report(self, results: Dict[str, Any]) -> str:
         lines = []
         c = results["currency"]
+        b_metrics = results["buffett_owner_earnings_metrics"]
         lines.append(f"# 🏛️ Enterprise Valuation Report: {results['company_name']}")
-        lines.append(f"**Methodology:** McKinsey 8th Edition Key Value Driver DCF & Damodaran Risk Bridge")
+        lines.append(f"**Methodology:** McKinsey 8th Ed. DCF, Damodaran Risk Bridge & Buffett Owner Earnings")
         lines.append("")
         
         # Summary Box
@@ -292,23 +352,36 @@ class McKinseyDCFEngine:
         lines.append("| Metric | Value | Reference / Notes |")
         lines.append("| :--- | :--- | :--- |")
         lines.append(f"| **WACC** | **{results['wacc']:.2%}** | Weighted Average Cost of Capital |")
+        lines.append(f"| **Discounting Convention** | {results['discounting_convention'].upper()} | McKinsey standard mid-year convention |")
+        lines.append(f"| **Economic Moat** | **{results['economic_moat'].upper()}** | Berkshire Hathaway competitive advantage tier |")
         lines.append(f"| **Perpetual Growth ($g$)** | {results['terminal_growth_rate']:.2%} | Long-term sustainable growth |")
-        lines.append(f"| **Terminal ROIC** | {results['terminal_roic']:.2%} | Reinvestment efficiency |")
+        lines.append(f"| **Terminal ROIC** | {results['terminal_roic']:.2%} | Post-moat reinvestment efficiency |")
         lines.append(f"| **PV of Discrete Cash Flows** | {c} {results['pv_discrete_fcff']:,.2f} | Forecast horizon |")
         lines.append(f"| **PV of Terminal Value** | {c} {results['pv_terminal_value']:,.2f} | McKinsey Key Value Driver |")
         lines.append(f"| **Enterprise Value (EV)** | **{c} {results['distress_adjusted_enterprise_value']:,.2f}** | Adjusted for distress risk ({results['probability_of_distress']:.1%}) |")
         lines.append(f"| **Equity Value** | **{c} {results['equity_value']:,.2f}** | Net of debt & non-operating claims |")
-        lines.append(f"| **Value Per Share** | **{c} {results['equity_value_per_share']:,.2f}** | Shares: {results['shares_outstanding']:,.0f} |")
+        lines.append(f"| **Intrinsic Value Per Share** | **{c} {results['equity_value_per_share']:,.2f}** | Shares: {results['shares_outstanding']:,.0f} |")
+        lines.append("")
+
+        # Buffett Moat & Margin of Safety Box
+        lines.append("## 🛡️ Warren Buffett Owner Earnings & Margin of Safety")
+        lines.append("| Metric | Value | Buffett / Munger Rule |")
+        lines.append("| :--- | :---: | :--- |")
+        lines.append(f"| **Average Owner Earnings** | {c} {b_metrics['average_owner_earnings']:,.2f} | NOPAT + D&A - Maint. Capex - $\\Delta$NWC - SBC |")
+        lines.append(f"| **Owner Earnings Yield** | **{b_metrics['owner_earnings_yield']:.2%}** | Target $\\ge 10\\%$ unlevered cash yield |")
+        lines.append(f"| **Margin of Safety (MOS)** | {b_metrics['margin_of_safety_percentage']:.1%} | Graham-Buffett margin of safety discount |")
+        lines.append(f"| **Safe Entry Equity Value** | {c} {b_metrics['buffett_margin_of_safety_equity_value']:,.2f} | Equity value at {b_metrics['margin_of_safety_percentage']:.0%} discount |")
+        lines.append(f"| **Max Safe Entry Share Price** | **{c} {b_metrics['buffett_safe_entry_share_price']:,.2f}** | **Maximum buy price with Margin of Safety** |")
         lines.append("")
 
         # Discrete Forecasts Table
         lines.append("## 📊 Forecast Horizon Cash Flows & Invested Capital")
-        lines.append("| Year | Revenue | EBIT | NOPAT | Net Inv. | FCFF | Inv. Capital | ROIC | Disc. FCFF |")
+        lines.append("| Year | Revenue | EBIT | NOPAT | Net Inv. | FCFF | Owner Earn. | ROIC | Disc. FCFF |")
         lines.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
         for p in results["forecast_periods"]:
             lines.append(
                 f"| {p['year']} | {p['revenue']:,.0f} | {p['ebit']:,.0f} | {p['nopat']:,.0f} | "
-                f"{p['net_investment']:,.0f} | {p['fcff']:,.0f} | {p['invested_capital']:,.0f} | "
+                f"{p['net_investment']:,.0f} | {p['fcff']:,.0f} | {p['owner_earnings']:,.0f} | "
                 f"{p['roic']:.1%} | {p['pv_fcff']:,.1f} |"
             )
         lines.append("")
