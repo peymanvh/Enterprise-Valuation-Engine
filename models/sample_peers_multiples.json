@@ -1,0 +1,57 @@
+{
+  "company_name": "Apex Industrial Technologies Inc.",
+  "currency": "USD",
+  "target_metrics": {
+    "sales": 500000000.0,
+    "ebitda": 100000000.0,
+    "ebit": 75000000.0,
+    "net_income": 45000000.0
+  },
+  "balance_sheet_bridge": {
+    "cash_and_marketable_securities": 45000000.0,
+    "non_operating_assets": 20000000.0,
+    "total_debt": 110000000.0,
+    "operating_lease_liabilities": 18000000.0,
+    "pension_deficits": 7000000.0,
+    "minority_interests": 5000000.0,
+    "shares_outstanding": 25000000.0
+  },
+  "peers": [
+    {
+      "ticker": "IND1",
+      "name": "Global Heavy Industries",
+      "ev_to_ebitda": 10.2,
+      "ev_to_ebit": 13.8,
+      "ev_to_sales": 2.1,
+      "p_to_e": 18.5,
+      "roic": 0.145
+    },
+    {
+      "ticker": "IND2",
+      "name": "Precision Dynamics Corp",
+      "ev_to_ebitda": 11.5,
+      "ev_to_ebit": 15.2,
+      "ev_to_sales": 2.4,
+      "p_to_e": 21.0,
+      "roic": 0.162
+    },
+    {
+      "ticker": "IND3",
+      "name": "Vanguard Manufacturing",
+      "ev_to_ebitda": 9.4,
+      "ev_to_ebit": 12.6,
+      "ev_to_sales": 1.9,
+      "p_to_e": 16.8,
+      "roic": 0.130
+    },
+    {
+      "ticker": "IND4",
+      "name": "Apex Peer Global",
+      "ev_to_ebitda": 10.8,
+      "ev_to_ebit": 14.5,
+      "ev_to_sales": 2.2,
+      "p_to_e": 19.4,
+      "roic": 0.150
+    }
+  ]
+}

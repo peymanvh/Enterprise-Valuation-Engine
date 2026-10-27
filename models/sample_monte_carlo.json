@@ -1,0 +1,15 @@
+{
+  "model_type": "dcf_enterprise",
+  "currency": "USD",
+  "iterations": 5000,
+  "seed": 42,
+  "parameters": {
+    "horizon_years": 5,
+    "nopat_base": { "type": "constant", "value": 56250000.0 },
+    "revenue_growth": { "type": "triangular", "low": 0.04, "mode": 0.07, "high": 0.11 },
+    "ebit_margin": { "type": "normal", "mean": 0.16, "std": 0.015 },
+    "wacc": { "type": "normal", "mean": 0.0816, "std": 0.006 },
+    "terminal_growth": { "type": "triangular", "low": 0.018, "mode": 0.025, "high": 0.032 },
+    "terminal_roic": { "type": "triangular", "low": 0.11, "mode": 0.14, "high": 0.18 }
+  }
+}

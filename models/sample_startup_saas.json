@@ -1,0 +1,51 @@
+{
+  "startup_name": "CloudMatrix AI Technologies",
+  "currency": "USD",
+  "vc_method": {
+    "investment_amount": 3000000.0,
+    "horizon_years": 5.0,
+    "target_irr": 0.40,
+    "target_moic": 5.378,
+    "terminal_exit_value": 75000000.0,
+    "future_dilution_rounds": [0.20, 0.15]
+  },
+  "scorecard_method": {
+    "benchmark_pre_money": 4000000.0,
+    "factors": {
+      "management_team": { "weight": 0.30, "score": 1.25 },
+      "size_of_opportunity": { "weight": 0.25, "score": 1.20 },
+      "product_technology": { "weight": 0.15, "score": 1.15 },
+      "competitive_environment": { "weight": 0.10, "score": 0.95 },
+      "marketing_sales_partnerships": { "weight": 0.10, "score": 1.05 },
+      "need_for_additional_investment": { "weight": 0.05, "score": 1.00 },
+      "other": { "weight": 0.05, "score": 1.00 }
+    }
+  },
+  "berkus_method": {
+    "sound_idea": 500000.0,
+    "prototype": 500000.0,
+    "quality_management_team": 500000.0,
+    "strategic_relationships": 350000.0,
+    "product_rollout_or_sales": 400000.0
+  },
+  "first_chicago_method": {
+    "scenarios": [
+      { "name": "Bull / Hypergrowth", "probability": 0.25, "valuation": 35000000.0 },
+      { "name": "Base / Organic Growth", "probability": 0.50, "valuation": 12000000.0 },
+      { "name": "Bear / Fire Sale", "probability": 0.25, "valuation": 1500000.0 }
+    ]
+  },
+  "saas_metrics": {
+    "arr": 2400000.0,
+    "mrr": 200000.0,
+    "arpu_annual": 12000.0,
+    "gross_margin": 0.82,
+    "annual_churn_rate": 0.06,
+    "cac": 18000.0,
+    "net_revenue_retention": 1.18,
+    "yoy_growth_rate": 0.65,
+    "fcf_margin": -0.15,
+    "quarterly_arr_delta": 250000.0,
+    "prev_quarter_sm_spend": 280000.0
+  }
+}

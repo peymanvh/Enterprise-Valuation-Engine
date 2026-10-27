@@ -1,0 +1,79 @@
+{
+  "company_name": "Apex Industrial Technologies Inc.",
+  "currency": "USD",
+  "initial_invested_capital": 350000000.0,
+  "assumptions": {
+    "cost_of_equity": 0.095,
+    "pre_tax_cost_of_debt": 0.055,
+    "tax_rate": 0.25,
+    "market_equity_weight": 0.75,
+    "market_debt_weight": 0.25,
+    "terminal_growth_rate": 0.025,
+    "terminal_roic": 0.14,
+    "long_term_gdp_growth": 0.030,
+    "probability_of_distress": 0.02,
+    "distress_liquidation_recovery_rate": 0.45
+  },
+  "balance_sheet_bridge": {
+    "cash_and_marketable_securities": 45000000.0,
+    "non_operating_assets": 20000000.0,
+    "total_debt": 110000000.0,
+    "operating_lease_liabilities": 18000000.0,
+    "pension_deficits": 7000000.0,
+    "contingent_litigation_liabilities": 2000000.0,
+    "minority_interests": 5000000.0,
+    "shares_outstanding": 25000000.0
+  },
+  "forecasts": [
+    {
+      "year": 2027,
+      "revenue": 500000000.0,
+      "ebit": 75000000.0,
+      "tax_rate": 0.25,
+      "depreciation_amortization": 25000000.0,
+      "capex": 35000000.0,
+      "change_in_nwc": 8000000.0,
+      "invested_capital": 368000000.0
+    },
+    {
+      "year": 2028,
+      "revenue": 540000000.0,
+      "ebit": 83700000.0,
+      "tax_rate": 0.25,
+      "depreciation_amortization": 27000000.0,
+      "capex": 37000000.0,
+      "change_in_nwc": 7000000.0,
+      "invested_capital": 385000000.0
+    },
+    {
+      "year": 2029,
+      "revenue": 580000000.0,
+      "ebit": 92800000.0,
+      "tax_rate": 0.25,
+      "depreciation_amortization": 29000000.0,
+      "capex": 39000000.0,
+      "change_in_nwc": 6500000.0,
+      "invested_capital": 401500000.0
+    },
+    {
+      "year": 2030,
+      "revenue": 615000000.0,
+      "ebit": 101475000.0,
+      "tax_rate": 0.25,
+      "depreciation_amortization": 30500000.0,
+      "capex": 41000000.0,
+      "change_in_nwc": 6000000.0,
+      "invested_capital": 418000000.0
+    },
+    {
+      "year": 2031,
+      "revenue": 645000000.0,
+      "ebit": 109650000.0,
+      "tax_rate": 0.25,
+      "depreciation_amortization": 32000000.0,
+      "capex": 42500000.0,
+      "change_in_nwc": 5500000.0,
+      "invested_capital": 434000000.0
+    }
+  ]
+}

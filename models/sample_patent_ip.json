@@ -1,0 +1,68 @@
+{
+  "patent_name": "Solid-State Battery Electrolyte Formulation (US Patent #9,876,543)",
+  "currency": "USD",
+  "tax_rate": 0.25,
+  "ip_discount_rate": 0.135,
+  "tax_amortization_years": 15,
+  "relief_from_royalty": {
+    "royalty_rate": 0.055,
+    "projected_revenues": [
+      25000000.0,
+      45000000.0,
+      70000000.0,
+      100000000.0,
+      130000000.0,
+      150000000.0,
+      160000000.0
+    ]
+  },
+  "mpeem": {
+    "cac_working_capital_rate": 0.05,
+    "cac_ppe_rate": 0.085,
+    "cac_workforce_rate": 0.12,
+    "periods": [
+      {
+        "year": 1,
+        "nopat": 3500000.0,
+        "working_capital": 4000000.0,
+        "net_ppe": 8000000.0,
+        "assembled_workforce_value": 2000000.0
+      },
+      {
+        "year": 2,
+        "nopat": 6800000.0,
+        "working_capital": 6500000.0,
+        "net_ppe": 12000000.0,
+        "assembled_workforce_value": 2500000.0
+      },
+      {
+        "year": 3,
+        "nopat": 11200000.0,
+        "working_capital": 9000000.0,
+        "net_ppe": 16000000.0,
+        "assembled_workforce_value": 3000000.0
+      },
+      {
+        "year": 4,
+        "nopat": 16500000.0,
+        "working_capital": 12000000.0,
+        "net_ppe": 19000000.0,
+        "assembled_workforce_value": 3500000.0
+      },
+      {
+        "year": 5,
+        "nopat": 21800000.0,
+        "working_capital": 15000000.0,
+        "net_ppe": 21000000.0,
+        "assembled_workforce_value": 4000000.0
+      }
+    ]
+  },
+  "real_options": {
+    "pv_expected_cash_flows": 65000000.0,
+    "commercialization_capex": 42000000.0,
+    "time_to_expiration_years": 4.5,
+    "risk_free_rate": 0.042,
+    "volatility": 0.48
+  }
+}
