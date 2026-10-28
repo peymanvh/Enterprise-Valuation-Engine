@@ -1,0 +1,26 @@
+{
+  "company_name": "Nexus Cognition AI Systems",
+  "currency": "USD",
+  "ai_unit_economics": {
+    "monthly_active_users": 650000.0,
+    "queries_per_user_month": 80.0,
+    "avg_tokens_per_query": 1800.0,
+    "revenue_per_million_tokens": 7.50,
+    "inference_cost_per_million_tokens": 2.80,
+    "gpu_utilization_rate": 0.72
+  },
+  "compute_and_gpu_capex": {
+    "annual_gpu_capex": 36000000.0,
+    "gpu_economic_life_years": 3.0,
+    "traditional_server_life_years": 5.0,
+    "model_training_run_capex": 20000000.0,
+    "training_accounting_treatment": "capitalize"
+  },
+  "debt_rollover_stress_test": {
+    "total_debt": 120000000.0,
+    "debt_maturing_next_2_years": 75000000.0,
+    "historical_interest_rate": 0.032,
+    "new_refinancing_interest_rate": 0.078,
+    "annual_ebit": 28000000.0
+  }
+}

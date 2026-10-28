@@ -20,6 +20,8 @@ from startup_venture import StartupVentureEngine
 from commercial_project import CommercialProjectEngine, compute_npv, compute_irr, compute_mirr
 from ip_patent_val import IPPatentValuationEngine, black_scholes_call, norm_cdf
 from monte_carlo_simulator import MonteCarloValuationSimulator, percentile
+from mna_deal_valuation import MNADealValuationEngine
+from ai_tech_valuation import AITechValuationEngine
 
 class TestMcKinseyDCFEngine(unittest.TestCase):
     def setUp(self):
@@ -246,6 +248,103 @@ class TestMonteCarloPercentile(unittest.TestCase):
         self.assertAlmostEqual(p50, 50.5, places=2)
         p10 = percentile(data, 0.10)
         self.assertAlmostEqual(p10, 10.9, places=2)
+
+class TestMNADealValuation(unittest.TestCase):
+    def setUp(self):
+        self.data = {
+            "deal_name": "Test M&A Deal",
+            "currency": "USD",
+            "target_standalone_equity_value": 100.0,
+            "target_shares_outstanding": 10.0,
+            "target_wacc": 0.10,
+            "tax_rate": 0.20,
+            "acquisition_premium_percentage": 0.20,
+            "synergies": [
+                {
+                    "name": "Cost Synergy",
+                    "category": "cost",
+                    "annual_amounts": [10.0, 10.0],
+                    "discount_rate_premium": 0.0
+                }
+            ],
+            "integration_costs": [
+                {
+                    "name": "Integration",
+                    "annual_cash_outlays": [2.0]
+                }
+            ],
+            "purchase_price_allocation": {
+                "target_book_value_net_assets": 50.0,
+                "tangible_assets_fair_value_step_up": 10.0,
+                "identifiable_intangibles": {
+                    "patents": 20.0
+                }
+            }
+        }
+        self.engine = MNADealValuationEngine(self.data)
+
+    def test_mna_value_creation_and_ppa(self):
+        res = self.engine.evaluate_deal()
+        # Offer price = 100 * (1 + 0.20) = 120.0
+        self.assertAlmostEqual(res["actual_offer_price"], 120.0, places=2)
+        self.assertAlmostEqual(res["dollar_premium_paid"], 20.0, places=2)
+        # Max purchase price = Standalone (100) + Net Synergies
+        self.assertAlmostEqual(res["maximum_purchase_price"], 100.0 + res["value_creation"]["net_pv_synergies"], places=2)
+        # Value created for acquirer = Net Synergies - Premium Paid (20.0)
+        self.assertAlmostEqual(res["value_creation"]["net_value_created_for_acquirer"], res["value_creation"]["net_pv_synergies"] - 20.0, places=2)
+
+        # PPA: Net Identifiable Assets = 50 (book) + 10 (step-up) + 20 (patents) = 80.0
+        # Goodwill = 120 (offer) - 80 = 40.0
+        ppa = res["purchase_price_allocation_ifrs3"]
+        self.assertAlmostEqual(ppa["fair_value_net_identifiable_assets"], 80.0, places=2)
+        self.assertAlmostEqual(ppa["residual_goodwill"], 40.0, places=2)
+
+class TestAITechValuation(unittest.TestCase):
+    def setUp(self):
+        self.data = {
+            "company_name": "Test AI",
+            "currency": "USD",
+            "ai_unit_economics": {
+                "monthly_active_users": 100000.0,
+                "queries_per_user_month": 10.0,
+                "avg_tokens_per_query": 1000.0,
+                "revenue_per_million_tokens": 10.0,
+                "inference_cost_per_million_tokens": 4.0,
+                "gpu_utilization_rate": 0.80
+            },
+            "compute_and_gpu_capex": {
+                "annual_gpu_capex": 30.0,
+                "gpu_economic_life_years": 3.0,
+                "traditional_server_life_years": 5.0
+            },
+            "debt_rollover_stress_test": {
+                "total_debt": 100.0,
+                "debt_maturing_next_2_years": 60.0,
+                "historical_interest_rate": 0.03,
+                "new_refinancing_interest_rate": 0.08,
+                "annual_ebit": 20.0
+            }
+        }
+        self.engine = AITechValuationEngine(self.data)
+
+    def test_ai_economics_and_depreciation(self):
+        res = self.engine.evaluate_all()
+        ai = res["ai_unit_economics"]
+        # Gross margin = (10 - 4) / 10 = 60%
+        self.assertAlmostEqual(ai["token_gross_margin"], 0.60, places=3)
+
+        # GPU depreciation: 30 / 3 = 10 per year vs 30 / 5 = 6 per year -> EBIT drag = 4
+        comp = res["compute_and_gpu_depreciation"]
+        self.assertAlmostEqual(comp["annual_gpu_depreciation"], 10.0, places=2)
+        self.assertAlmostEqual(comp["annual_ebit_depreciation_drag"], 4.0, places=2)
+
+        # Debt rollover: 40 unmatured @ 3% (1.2) + 60 @ 8% (4.8) = 6.0 interest
+        # Original: 100 @ 3% = 3.0 -> incremental interest = 3.0
+        # Post-rollover ICR = 20 / 6.0 = 3.333x
+        roll = res["debt_rollover_stress_test"]
+        self.assertAlmostEqual(roll["post_rollover_annual_interest"], 6.0, places=2)
+        self.assertAlmostEqual(roll["incremental_annual_cash_drain"], 3.0, places=2)
+        self.assertAlmostEqual(roll["post_rollover_interest_coverage_ratio"], 20.0 / 6.0, places=3)
 
 if __name__ == "__main__":
     unittest.main()

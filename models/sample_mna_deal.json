@@ -1,0 +1,56 @@
+{
+  "deal_name": "Project Titan: Acquisition of Meridian Precision Engineering",
+  "currency": "USD",
+  "acquirer_name": "Global Industrial Holdings Inc.",
+  "target_name": "Meridian Precision Engineering Ltd.",
+  "target_standalone_equity_value": 120000000.0,
+  "target_shares_outstanding": 10000000.0,
+  "target_wacc": 0.088,
+  "acquirer_wacc": 0.078,
+  "tax_rate": 0.25,
+  "terminal_synergy_growth": 0.02,
+  "acquisition_premium_percentage": 0.25,
+  "cash_consideration_percentage": 0.70,
+  "private_target_adjustments": {
+    "enabled": true,
+    "annual_officer_comp_normalization": 1500000.0,
+    "discount_lack_of_marketability": 0.20,
+    "control_premium": 0.25
+  },
+  "synergies": [
+    {
+      "name": "Corporate G&A and Duplicate Overhead Rationalization",
+      "category": "cost",
+      "annual_amounts": [4000000.0, 7500000.0, 9000000.0, 9500000.0, 10000000.0],
+      "discount_rate_premium": 0.0
+    },
+    {
+      "name": "Direct Procurement & Raw Material Volume Discounts",
+      "category": "cost",
+      "annual_amounts": [2000000.0, 4500000.0, 6000000.0, 6500000.0, 7000000.0],
+      "discount_rate_premium": 0.01
+    },
+    {
+      "name": "Global Cross-Selling into Acquirer European Accounts",
+      "category": "revenue",
+      "annual_amounts": [5000000.0, 12000000.0, 20000000.0, 26000000.0, 30000000.0],
+      "margin_percentage": 0.35,
+      "discount_rate_premium": 0.025
+    }
+  ],
+  "integration_costs": [
+    {
+      "name": "Severance, Workforce Restructuring & IT ERP Migration",
+      "annual_cash_outlays": [6000000.0, 4000000.0, 1500000.0]
+    }
+  ],
+  "purchase_price_allocation": {
+    "target_book_value_net_assets": 60000000.0,
+    "tangible_assets_fair_value_step_up": 12000000.0,
+    "identifiable_intangibles": {
+      "proprietary_manufacturing_patents": 18000000.0,
+      "customer_relationships_and_contracts": 15000000.0,
+      "trade_names_and_brands": 8000000.0
+    }
+  }
+}
