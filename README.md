@@ -45,25 +45,64 @@
 
 ### A. Corporate Enterprise Valuation (McKinsey 8th Ed.)
 The core valuation equation connects cash flow, growth, and returns:
-$$\text{Value} = \frac{\text{NOPAT}_{t+1} \times \left(1 - \frac{g}{\text{ROIC}}\right)}{\text{WACC} - g}$$
+
+$$
+\text{Value} = \frac{\text{NOPAT}_{t+1} \times \left(1 - \frac{g}{\text{ROIC}}\right)}{\text{WACC} - g}
+$$
 
 Invested Capital reconciliation:
-$$\text{Invested Capital} = \text{Operating Cash} + \text{OWC} + \text{Net PPE} + \text{Capitalized R and D} + \text{Capitalized Leases} - \text{NIBCL}$$
+
+$$
+\text{Invested Capital} = \text{Operating Cash} + \text{OWC} + \text{Net PPE} + \text{Capitalized R and D} + \text{Capitalized Leases} - \text{NIBCL}
+$$
 
 ### B. High-Growth Tech & SaaS Unit Economics
-- **LTV / CAC Ratio:** $\text{LTV} = \frac{\text{ARPU} \times \text{Gross Margin}}{\text{Churn Rate}} \implies \frac{\text{LTV}}{\text{CAC}} \ge 3.0x$
-- **CAC Payback Period:** $\frac{\text{CAC}}{\text{Monthly Gross Profit per Account}} < 12 \text{ months}$
-- **Rule of 40:** $\text{YoY Revenue Growth Rate} + \text{Free Cash Flow Margin} \ge 40\%$
+
+**LTV / CAC Ratio:**
+
+$$
+\text{LTV} = \frac{\text{ARPU} \times \text{Gross Margin}}{\text{Churn Rate}} \implies \frac{\text{LTV}}{\text{CAC}} \ge 3.0x
+$$
+
+**CAC Payback Period:**
+
+$$
+\text{CAC Payback} = \frac{\text{CAC}}{\text{Monthly Gross Profit per Account}} < 12 \text{ months}
+$$
+
+**Rule of 40:**
+
+$$
+\text{YoY Revenue Growth Rate} + \text{Free Cash Flow Margin} \ge 40\%
+$$
 
 ### C. Commercial Trade & Project Feasibility (UNIDO)
-- **Cash Conversion Cycle:** $\text{CCC} = \text{DSO} + \text{DIO} - \text{DPO}$
-- **Debt Service Coverage Ratio:** $\text{DSCR}_t = \frac{\text{CFADS}_t}{\text{Debt Service}_t} \ge 1.30x$
+
+**Cash Conversion Cycle:**
+
+$$
+\text{CCC} = \text{DSO} + \text{DIO} - \text{DPO}
+$$
+
+**Debt Service Coverage Ratio:**
+
+$$
+\text{DSCR}_t = \frac{\text{CFADS}_t}{\text{Debt Service}_t} \ge 1.30x
+$$
 
 ### D. Patent & Technology Valuation
-- **Relief-from-Royalty (with TAB):**
-  $$\text{Value} = \left[ \sum_{t=1}^T \frac{\text{Revenue}_t \times r_{\text{royalty}} \times (1 - T)}{(1 + k_{\text{IP}})^t} \right] \times \text{TAB Factor}$$
-- **Black-Scholes Real Options:**
-  $$C = S \cdot N(d_1) - K \cdot e^{-rT} \cdot N(d_2)$$
+
+**Relief-from-Royalty (with Tax Amortization Benefit):**
+
+$$
+\text{Value} = \left[ \sum_{t=1}^{T} \frac{\text{Revenue}_t \times r_{\text{royalty}} \times (1 - T)}{(1 + k_{\text{IP}})^t} \right] \times \text{TAB}
+$$
+
+**Black-Scholes Real Options (Patent Commercialization):**
+
+$$
+C = S \cdot N(d_1) - K \cdot e^{-rT} \cdot N(d_2)
+$$
 
 ---
 
