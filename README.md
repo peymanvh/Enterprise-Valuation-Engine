@@ -29,8 +29,11 @@
 
 ## 1. Executive Overview
 **`enterprise-valuation-engine`** is an open-source, mathematically verified valuation architecture built to eliminate heuristic approximations in financial modeling. It executes peer-reviewed formulas across:
-- **Corporate Enterprises:** McKinsey & Company (8th Edition) Key Value Driver DCF, NOPAT adjustments, invested capital reconciliations, ROIC trees, and Economic Profit (EVA).
-- **Emerging & Distressed Assets:** Damodaran risk premiums, synthetic credit rating debt spreads, and dual-state distress overlays.
+- **Corporate Enterprises:** McKinsey & Company (8th Edition - 2025/2026) Key Value Driver DCF, NOPAT adjustments, invested capital reconciliations, ROIC trees, Economic Profit (EVA), AI/digital Capex vs. Opex depreciation dynamics, and higher-for-longer cost of capital adjustments.
+- **Mergers & Acquisitions and Acquired Assets (M&A):** Chris M. Mellen & Frank C. Evans (*Valuation for M&A: Building and Measuring Private Company Value*), 5 Levels of Value, risk-adjusted cost and revenue synergies, maximum walk-away purchase price, and ASC 805 / IFRS 3 Purchase Price Allocation (PPA).
+- **Private Companies & Marketability Discounts:** Quantified Control Premiums, Discount for Lack of Control (DLOC), and Discount for Lack of Marketability (DLOM) using empirical benchmarks and Chaffe put option models.
+- **Distressed Assets & Foreclosure Liquidation:** Orderly Liquidation Value (OLV) vs. Forced Liquidation Value (FLV / fire-sale), net realizable liquidation value (NRLV), and absolute priority claims distribution waterfalls.
+- **Emerging & Distressed Debt:** Damodaran risk premiums, synthetic credit rating debt spreads, and dual-state distress overlays.
 - **Early-Stage Tech & Ventures:** VC Method, Bill Payne Scorecard, Dave Berkus Method, First Chicago probability-weighted scenarios, and rigorous SaaS unit economics audits.
 - **Commercial Projects & Trade:** UNIDO feasibility standards, dynamic Cash Conversion Cycle (CCC), CFADS, bankability debt covenants (DSCR $\ge 1.30x$, LLCR $\ge 1.40x$), and break-even thresholds.
 - **Intellectual Property & Patents:** Relief-from-Royalty with Tax Amortization Benefits (TAB), Multi-Period Excess Earnings Method (MPEEM), and Black-Scholes Real Options.
@@ -73,31 +76,50 @@ enterprise-valuation-engine/
 │   └── system_prompt.md                       # OpenAI Codex / GPT-4o / GPT-5 agent prompt
 ├── .claude/
 │   └── skills/
-│       └── enterprise-valuation/
-│           └── SKILL.md                       # Claude Code native skill
+│       ├── enterprise-valuation/SKILL.md      # Claude Code native corporate skill
+│       └── mergers-acquisitions-valuation/    # Claude Code native M&A skill
 ├── .gemini/
 │   └── skills/
-│       └── enterprise-valuation/
-│           └── SKILL.md                       # Antigravity native skill
+│       ├── enterprise-valuation/SKILL.md      # Antigravity native corporate skill
+│       └── mergers-acquisitions-valuation/    # Antigravity native M&A skill
 ├── skills/
-│   └── enterprise-valuation/                  # Universal Master Skill Specification
-│       ├── SKILL.md                           # Master workflow, triggers & execution logic
+│   ├── enterprise-valuation/                  # Universal Master Corporate Skill
+│   │   ├── SKILL.md                           # Master workflow, triggers & execution logic
+│   │   ├── scripts/
+│   │   │   ├── dcf_mckinsey.py                # Enterprise DCF, NOPAT, Invested Capital, ROIC, WACC
+│   │   │   ├── multiples_valuation.py         # EV/EBITDA, EV/EBIT, P/E, PEG, peer group regression
+│   │   │   ├── startup_venture.py             # Scorecard, Berkus, VC Method, SaaS unit economics
+│   │   │   ├── commercial_project.py          # Trade feasibility, CCC, DSCR, LLCR, IRR, NPV
+│   │   │   ├── ip_patent_val.py               # Relief-from-Royalty, MPEEM, Black-Scholes Real Options
+│   │   │   └── monte_carlo_simulator.py       # Probabilistic distribution & sensitivity engine
+│   │   └── references/
+│   │       ├── mckinsey_8th_edition_core.md   # Mathematical breakdown & AI/Capex/Cost of Capital updates
+│   │       ├── damodaran_frameworks.md        # Risk premiums, synthetic debt, distressed assets
+│   │       ├── commercial_trade_unido.md      # UNIDO trade & project feasibility standards
+│   │       └── patent_intangible_ip.md        # IFRS 13, USPTO, and WIPO valuation methods
+│   └── mergers-acquisitions-valuation/        # Universal Master M&A & Acquired Assets Skill
+│       ├── SKILL.md                           # M&A workflow, triggers & 5 levels of value
 │       ├── scripts/
-│       │   ├── dcf_mckinsey.py                # Enterprise DCF, NOPAT, Invested Capital, ROIC, WACC
-│       │   ├── multiples_valuation.py         # EV/EBITDA, EV/EBIT, P/E, PEG, peer group regression
-│       │   ├── startup_venture.py             # Scorecard, Berkus, VC Method, SaaS unit economics
-│       │   ├── commercial_project.py          # Trade feasibility, CCC, DSCR, LLCR, IRR, NPV
-│       │   ├── ip_patent_val.py               # Relief-from-Royalty, MPEEM, Black-Scholes Real Options
-│       │   └── monte_carlo_simulator.py       # Probabilistic distribution & sensitivity engine
+│       │   ├── ma_synergy_valuation.py        # Cost/revenue synergy PV, haircut & walk-away price
+│       │   ├── private_dlom_dloc.py           # DLOC, Chaffe option DLOM & 5 levels of value
+│       │   ├── distressed_asset_liquidation.py# Orderly (OLV) vs. Forced (FLV) liquidation waterfall
+│       │   └── accretion_dilution.py          # Pro-forma EPS accretion/dilution & financing mix
 │       └── references/
-│           ├── mckinsey_8th_edition_core.md   # Mathematical breakdown & accounting reconciliations
-│           ├── damodaran_frameworks.md        # Risk premiums, synthetic debt, distressed assets
-│           ├── commercial_trade_unido.md      # UNIDO trade & project feasibility standards
-│           └── patent_intangible_ip.md        # IFRS 13, USPTO, and WIPO valuation methods
+│           ├── m_and_a_valuation_mellen_evans.md # Mellen & Evans, DLOC/DLOM, and Synergy haircuts
+│           └── purchase_price_allocation_asc805.md # ASC 805 / IFRS 3 PPA & Intangible Fair Value
 ├── models/                                    # Ready-to-run JSON templates
 │   ├── sample_corporate_dcf.json
 │   ├── sample_peers_multiples.json
 │   ├── sample_startup_saas.json
+│   ├── sample_trade_project.json
+│   ├── sample_patent_ip.json
+│   ├── sample_monte_carlo.json
+│   ├── sample_ma_transaction.json
+│   └── sample_distressed_liquidation.json
+└── tests/
+    ├── test_valuation_engine.py               # Corporate, startup, patent, and simulation tests
+    └── test_ma_valuation.py                   # M&A, synergy, DLOM/DLOC, and liquidation tests
+```
 │   ├── sample_trade_project.json
 │   ├── sample_patent_ip.json
 │   └── sample_monte_carlo.json
@@ -175,12 +197,15 @@ OK
 ## ۱. معرفی و چارچوب‌های استاندارد
 موتور جامع ارزش‌گذاری دارایی‌ها و شرکت‌ها (**`enterprise-valuation-engine`**) یک سامانه محاسباتی تخصصی، متن‌باز و مبتنی بر استاندارد‌های بین‌المللی است که برای حذف خطاهای ناشی از تخمین‌های غیرعلمی در تصمیم‌گیری‌های مالی و سرمایه‌گذاری طراحی شده است.
 
-این موتور بر پایه ۵ مرجع کلاسیک و استاندارد مالی دنیا پیاده‌سازی شده است:
-1. **ارزش‌گذاری شرکت‌های بزرگ و بالغ:** ویرایش هشتم کتاب مشهور مکنزی (*Valuation: Measuring and Managing the Value of Companies*) اثر تیم کولر و همکاران.
-2. **ارزش‌گذاری استارتاپ‌ها و شرکت‌های داده‌محور:** مدل‌های سرمایه‌گذاری پرریسک (VC Method)، مدل کارت امتیازی (Bill Payne Scorecard)، مدل برکوس (Dave Berkus) و سلامت اقتصاد واحد (SaaS Unit Economics).
-3. **امکان‌سنجی پروژه‌ها و تجارت بین‌الملل:** استانداردهای رسمی یونیدو (UNIDO)، چرخه تبدیل وجه نقد (CCC) و نسبت‌های پوشش بدهی بانکی (DSCR و LLCR).
-4. **دارایی‌های نامشهود و پتنت‌ها:** روش صرفه‌جویی در حق امتیاز (Relief-from-Royalty) با احتساب مزیت استهلاک مالیاتی (TAB) و ارزش‌گذاری اختیارات واقعی با مدل بلک-شولز (Black-Scholes Real Options).
-5. **ارزیابی ریسک با شبیه‌سازی مونت‌کارلو:** تحلیل آماری فواصل اطمینان و رتبه‌بندی حساسیت متغیرها با نمودار گردباد (Tornado Chart).
+این موتور بر پایه مراجع استاندارد و طراز اول مالی دنیا پیاده‌سازی شده است:
+1. **ارزش‌گذاری شرکت‌های بزرگ و بالغ (ویرایش هشتم مکنزی - ۲۰۲۵/۲۰۲۶):** اثر تیم کولر و مکنزی با پوشش متغیرهای معاصر اقتصاد نظیر هوش مصنوعی (AI Capex vs Opex)، استهلاک شتابان چیپ‌های پردازشی، رژیم نوین نرخ بهره و هزینه سرمایه بالاتر.
+2. **ارزش‌گذاری ادغام و تملیک (M&A) و دارایی‌های تملیکی:** بر اساس کتاب معتبر *Valuation for M&A: Building and Measuring Private Company Value* (تألیف کریس ملن و فرانک ایوانز) و استانداردهای حسابداری ASC 805 / IFRS 3 شامل هم‌افزایی درآمدی و هزینه‌ای، قیمت سقف تصاحب (Walk-away price)، و تخصیص قیمت خرید (PPA).
+3. **ارزش‌گذاری شرکت‌های خصوصی و تخفیف‌های نقدشوندگی (DLOM / DLOC):** محاسبه ریاضی صرف کنترل و تخفیف عدم کنترل، و تخفیف عدم نقدشوندگی شرکت‌های خصوصی با مدل اختیار فروش Chaffe و شواهد سهام مقید.
+4. **دارایی‌های تملیکی و شرایط اضطرار (Distressed & Liquidation):** ارزش انحلال با برنامه (OLV) و ارزش انحلال اجباری (FLV / حراج سریع) همراه با آبشار توزیع مطالبات با اولویت مطلق قانون ورشکستگی.
+5. **ارزش‌گذاری استارتاپ‌ها و شرکت‌های داده‌محور:** مدل‌های سرمایه‌گذاری پرریسک (VC Method)، مدل کارت امتیازی (Bill Payne Scorecard)، مدل برکوس (Dave Berkus) و سلامت اقتصاد واحد (SaaS Unit Economics).
+6. **امکان‌سنجی پروژه‌ها و تجارت بین‌الملل:** استانداردهای رسمی یونیدو (UNIDO)، چرخه تبدیل وجه نقد (CCC) و نسبت‌های پوشش بدهی بانکی (DSCR و LLCR).
+7. **دارایی‌های نامشهود و پتنت‌ها:** روش صرفه‌جویی در حق امتیاز (Relief-from-Royalty) با احتساب مزیت استهلاک مالیاتی (TAB) و ارزش‌گذاری اختیارات واقعی با مدل بلک-شولز (Black-Scholes Real Options).
+8. **ارزیابی ریسک با شبیه‌سازی مونت‌کارلو:** تحلیل آماری فواصل اطمینان و رتبه‌بندی حساسیت متغیرها با نمودار گردباد (Tornado Chart).
 
 ---
 

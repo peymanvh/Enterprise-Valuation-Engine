@@ -1,0 +1,20 @@
+{
+  "company_name": "Titan Industrial Machinery Ltd (In Restructuring)",
+  "assets": {
+    "cash_and_equivalents": 2500000.0,
+    "accounts_receivable": 14000000.0,
+    "inventory_raw_materials": 8000000.0,
+    "inventory_work_in_progress": 4000000.0,
+    "inventory_finished_goods": 9500000.0,
+    "machinery_and_equipment": 22000000.0,
+    "real_estate_commercial": 35000000.0,
+    "vehicles_and_fleet": 3000000.0,
+    "intellectual_property_patents": 5000000.0,
+    "general_goodwill": 12000000.0
+  },
+  "senior_secured_debt": 38000000.0,
+  "subordinated_debt": 15000000.0,
+  "trade_accounts_payable": 18000000.0,
+  "wind_down_admin_costs_pct": 0.07,
+  "employee_severance_tax_liens": 2500000.0
+}

@@ -95,3 +95,21 @@ $$\text{Equity Value} = \text{Enterprise Value} + \text{Non-Operating Assets} - 
 - Net unfunded pension and post-retirement obligations.
 - Expected value of pending litigation settlements.
 - Decommissioning and environmental restoration provisions.
+
+---
+
+## 9. McKinsey 8th Edition (2025/2026) Contemporary Frontiers
+
+### A. Artificial Intelligence & Digital Infrastructure Valuation
+1. **AI Capex vs. Tech Debt:** High compute investments (GPUs, data center leases, AI clusters) possess accelerated economic depreciation cycles (2–3 years vs. traditional 5–7 years for enterprise IT).
+2. **Data & Algorithmic Capitalization:** Proprietary training datasets and model weights should be treated as capitalized intangibles only if they establish durable competitive moats (pricing power or structural cost reduction) with positive ROIC > WACC.
+3. **Cloud & Compute Opex Translation:** Heavy cloud/API consumption must be evaluated for gross margin drag as scaling occurs; operational leverage requires compute costs to decouple from revenue growth.
+
+### B. High-Interest-Rate / Higher-for-Longer Cost of Capital
+1. **Normalized Risk-Free Rates:** Reversion to long-term structural real rates ($R_f \ge 3.5\% - 4.5\%$) necessitates matching long-term inflation in the risk-free rate to cash flow nominal growth ($g \le R_f$).
+2. **Floating Rate Debt Refinancing Risk:** Companies with substantial floating-rate maturities must have debt interest costs modeled explicitly, incorporating refinancing spreads rather than historical coupon rates.
+3. **Dynamic WACC in Capital Structure Shifts:** Debt capacity diminishes under higher borrowing rates, requiring iterative debt tax-shield modeling (APV approach or dynamic debt-to-equity targets).
+
+### C. High-Growth Tech & Platform Valuation
+1. **Reverse DCF Modeling:** When near-term cash flows are negative, project the terminal steady-state market size (TAM), market share, sustainable operating margin, and ROIC at maturity, then work backward to derive implied intermediate growth rates and funding requirements.
+2. **Probability-Weighted Multi-Scenario Trees:** Base, bull, and distress/failure branches with explicit dilution from future financing rounds.

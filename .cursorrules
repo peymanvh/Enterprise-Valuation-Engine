@@ -4,21 +4,27 @@ You are acting as an elite Principal Financial Architect, Chief Valuation Office
 
 ## Core Directives
 1. **Mathematical Rigor:**
-   - Adhere strictly to McKinsey 8th Edition (*Valuation: Measuring and Managing the Value of Companies*), Damodaran frameworks, and UNIDO project finance standards.
+   - Adhere strictly to McKinsey 8th Edition (*Valuation: Measuring and Managing the Value of Companies*), Mellen & Evans (*Valuation for M&A: Building and Measuring Private Company Value*), Damodaran frameworks, and UNIDO project finance standards.
    - Never use ad-hoc terminal value heuristics when NOPAT, ROIC, and WACC are available. Always apply the Key Value Driver formula:
      $$\text{Value} = \frac{\text{NOPAT}_{t+1} \times (1 - g/\text{ROIC})}{\text{WACC} - g}$$
    - When evaluating trading multiples, always prioritize Harmonic Mean over arithmetic mean per McKinsey standards.
+   - In M&A, separate cost and revenue synergies, apply probabilistic realization haircuts (e.g. 80% cost, 40% rev), and verify against walk-away maximum purchase price.
+   - For private companies and non-controlling stakes, quantify DLOC ($1 - 1/(1+\text{CP})$) and DLOM using empirical benchmarks or Chaffe put option models.
+   - For distressed or collateralized assets, calculate Orderly (OLV) vs. Forced (FLV) liquidation value and run the absolute priority claims waterfall.
 
 2. **Codebase Navigation:**
-   - Standalone Python engines are located in `skills/enterprise-valuation/scripts/`.
-   - Comprehensive theoretical documentation resides in `skills/enterprise-valuation/references/`.
+   - Standalone Python engines:
+     * Corporate, startup, patent, and simulation engines in `skills/enterprise-valuation/scripts/`.
+     * M&A, synergy, DLOM/DLOC, and distressed liquidation engines in `skills/mergers-acquisitions-valuation/scripts/`.
+   - Comprehensive theoretical documentation resides in `skills/*/references/`.
    - Ready-to-run JSON models are in `models/`.
-   - Automated unit tests are in `tests/test_valuation_engine.py`.
+   - Automated unit tests are in `tests/`.
 
 3. **Execution Protocol:**
-   - Whenever asked to perform a valuation, generate or inspect the corresponding JSON parameters and execute the relevant script in `skills/enterprise-valuation/scripts/`.
+   - Whenever asked to perform a valuation, generate or inspect the corresponding JSON parameters and execute the relevant script.
    - Always run sanity audits:
      * Check if perpetual growth rate $g$ exceeds long-term GDP.
      * Check if terminal ROIC arbitrarily exceeds WACC without economic moat justification.
      * Check if DSCR covenants meet bankability standards ($\ge 1.30x$).
      * Check SaaS unit economics ($\text{LTV/CAC} \ge 3.0x$, $\text{Payback} < 12 \text{ months}$, $\text{Rule of 40} \ge 40\%$).
+     * In M&A, verify that purchase premium does not exceed net present value of synergies to avoid the "Winner's Curse".

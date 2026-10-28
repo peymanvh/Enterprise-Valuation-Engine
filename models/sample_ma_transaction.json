@@ -1,0 +1,17 @@
+{
+  "target_company": "Nexura Tech Solutions (Private)",
+  "acquirer_company": "Apex Global Corp (Public)",
+  "standalone_target_value": 85000000.0,
+  "standalone_acquirer_value": 450000000.0,
+  "cost_synergies": [3000000.0, 5000000.0, 6500000.0, 7000000.0, 7000000.0],
+  "revenue_synergies": [2000000.0, 6000000.0, 10000000.0, 14000000.0, 16000000.0],
+  "operating_margin_on_rev_synergies": 0.25,
+  "integration_costs": [4000000.0, 2500000.0, 1000000.0, 500000.0, 0.0],
+  "tax_rate": 0.25,
+  "wacc_cost_synergies": 0.09,
+  "wacc_rev_synergies": 0.12,
+  "cost_synergy_probability": 0.85,
+  "revenue_synergy_probability": 0.45,
+  "terminal_synergy_growth": 0.02,
+  "offer_price": 105000000.0
+}
