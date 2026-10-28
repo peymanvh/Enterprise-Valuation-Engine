@@ -39,7 +39,7 @@ $$\text{NOPAT} = \text{EBITA} - \text{Operating Cash Taxes}$$
 Invested capital is the net operational assets required to generate NOPAT.
 
 ### Operating Approach (Assets):
-$$\text{Invested Capital} = \text{Operating Cash} + \text{Operating Working Capital} + \text{Net PP\&E} + \text{Capitalized R\&D} + \text{Capitalized Leases} + \text{Other Operating Assets} - \text{Non-Interest-Bearing Current Liabilities (NIBCL)}$$
+$$\text{Invested Capital} = \text{Operating Cash} + \text{Operating Working Capital} + \text{Net PPE} + \text{Capitalized R and D} + \text{Capitalized Leases} + \text{Other Operating Assets} - \text{Non-Interest-Bearing Current Liabilities (NIBCL)}$$
 
 Where:
 - **Operating Working Capital** = $(\text{Operating Receivables} + \text{Inventory} + \text{Prepaid Expenses}) - (\text{Operating Payables} + \text{Accrued Expenses})$.

@@ -48,7 +48,7 @@ The core valuation equation connects cash flow, growth, and returns:
 $$\text{Value} = \frac{\text{NOPAT}_{t+1} \times \left(1 - \frac{g}{\text{ROIC}}\right)}{\text{WACC} - g}$$
 
 Invested Capital reconciliation:
-$$\text{Invested Capital} = \text{Operating Cash} + \text{OWC} + \text{Net PP\&E} + \text{Capitalized R\&D} + \text{Capitalized Leases} - \text{NIBCL}$$
+$$\text{Invested Capital} = \text{Operating Cash} + \text{OWC} + \text{Net PPE} + \text{Capitalized R and D} + \text{Capitalized Leases} - \text{NIBCL}$$
 
 ### B. High-Growth Tech & SaaS Unit Economics
 - **LTV / CAC Ratio:** $\text{LTV} = \frac{\text{ARPU} \times \text{Gross Margin}}{\text{Churn Rate}} \implies \frac{\text{LTV}}{\text{CAC}} \ge 3.0x$

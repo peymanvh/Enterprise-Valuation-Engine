@@ -38,7 +38,7 @@ Used when the patent or core proprietary technology is the primary driver of exc
 Deduct fair returns on supporting assets required to generate cash flow:
 $$\text{Excess Earnings}_t = \text{NOPAT}_t - \sum \text{CAC}_t$$
 
-$$\sum \text{CAC}_t = (\text{Working Capital}_t \times r_{\text{wc}}) + (\text{Net PP\&E}_t \times r_{\text{ppe}}) + (\text{Assembled Workforce}_t \times r_{\text{wf}}) + (\text{Brand}_t \times r_{\text{brand}})$$
+$$\sum \text{CAC}_t = (\text{Working Capital}_t \times r_{\text{wc}}) + (\text{Net PPE}_t \times r_{\text{ppe}}) + (\text{Assembled Workforce}_t \times r_{\text{wf}}) + (\text{Brand}_t \times r_{\text{brand}})$$
 
 Typical Hurdle Rates for CAC:
 - Working Capital ($r_{\text{wc}}$): Short-term borrowing cost ($4\% - 6\%$).
