@@ -1,11 +1,14 @@
 # 🏛️ Enterprise, Venture & Commercial Valuation Engine
-## High-Precision Cross-Platform AI Skill Suite & Computational Financial Architecture
+## An Open-Source Implementation of McKinsey & Company's *"Valuation: Measuring and Managing the Value of Companies"*, Damodaran Frameworks & UNIDO Standards
 
+[![Live Docs](https://img.shields.io/badge/Live%20Docs-GitHub%20Pages-success?style=for-the-badge&logo=github)](https://peymanvh.github.io/Enterprise-Valuation-Engine/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Standard: McKinsey 8th Ed](https://img.shields.io/badge/Standard-McKinsey%208th%20Ed-navy.svg)](#theoretical-foundations)
 [![Standards: UNIDO & Damodaran](https://img.shields.io/badge/Standards-UNIDO%20%7C%20Damodaran-orange.svg)](#theoretical-foundations)
 [![Multi-Platform AI](https://img.shields.io/badge/AI%20Platforms-Claude%20%7C%20Cursor%20%7C%20Antigravity%20%7C%20Codex-success.svg)](#cross-platform-ai-compatibility)
+
+> **Live Documentation & Interactive Portal:** [https://peymanvh.github.io/Enterprise-Valuation-Engine/](https://peymanvh.github.io/Enterprise-Valuation-Engine/)
 
 ---
 

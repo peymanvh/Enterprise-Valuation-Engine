@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://peymanvh.github.io/Enterprise-Valuation-Engine/sitemap.xml

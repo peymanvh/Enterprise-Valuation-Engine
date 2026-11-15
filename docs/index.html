@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise Valuation Engine | McKinsey Valuation & Financial Modeling</title>
+  <meta name="description" content="Open-source implementation of McKinsey's Valuation: Measuring and Managing the Value of Companies, Damodaran frameworks, M&A, Venture Capital, and UNIDO feasibility models in Python.">
+  <meta name="keywords" content="Valuation Measuring and Managing the Value of Companies, McKinsey Valuation, Corporate Valuation Engine, DCF Python, Damodaran Valuation, M&A Valuation, Venture Capital Method, Patent Valuation, UNIDO Feasibility, Business Valuation Python">
+  <meta name="author" content="Peyman (peymanvh)">
+  <link rel="canonical" href="https://peymanvh.github.io/Enterprise-Valuation-Engine/">
+  
+  <!-- OpenGraph Metadata for Social & Search Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://peymanvh.github.io/Enterprise-Valuation-Engine/">
+  <meta property="og:title" content="Enterprise Valuation Engine | McKinsey & Damodaran Python Suite">
+  <meta property="og:description" content="Production-grade implementation of McKinsey's Valuation: Measuring and Managing the Value of Companies, M&A, VC & UNIDO project finance.">
+  <meta property="og:site_name" content="Enterprise Valuation Engine">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Enterprise Valuation Engine | McKinsey & Damodaran Models">
+  <meta name="twitter:description" content="Production-grade financial valuation engine implementing McKinsey 8th Ed, Damodaran, M&A, and VC frameworks.">
+  
+  <!-- Schema.org JSON-LD for Google Rich Results -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Enterprise Valuation Engine",
+    "operatingSystem": "Cross-platform (Windows, Linux, macOS)",
+    "applicationCategory": "BusinessApplication",
+    "applicationSubCategory": "Financial Valuation & Economic Analysis",
+    "url": "https://peymanvh.github.io/Enterprise-Valuation-Engine/",
+    "downloadUrl": "https://github.com/peymanvh/Enterprise-Valuation-Engine",
+    "author": {
+      "@type": "Person",
+      "name": "Peyman",
+      "url": "https://github.com/peymanvh"
+    },
+    "description": "Open-source Python financial valuation engine implementing McKinsey & Company's Valuation: Measuring and Managing the Value of Companies, Damodaran frameworks, and UNIDO standards.",
+    "license": "https://opensource.org/licenses/MIT",
+    "programmingLanguage": "Python"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    "name": "enterprise-valuation-engine",
+    "codeRepository": "https://github.com/peymanvh/Enterprise-Valuation-Engine",
+    "programmingLanguage": "Python",
+    "runtimePlatform": "Python 3.9+",
+    "license": "https://opensource.org/licenses/MIT"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #111827;
+      --border: #1f2937;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --gold: #f59e0b;
+      --green: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 0 1rem;
+    }
+    header {
+      max-width: 1000px;
+      margin: 3rem auto 2rem;
+      text-align: center;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ffffff 0%, #93c5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 800px;
+      margin: 0 auto 2rem;
+    }
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+    .btn-secondary {
+      background: var(--card-bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      background: var(--border);
+    }
+    main {
+      max-width: 1000px;
+      margin: 0 auto 4rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: border-color 0.2s ease;
+    }
+    .card:hover {
+      border-color: var(--accent);
+    }
+    .card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    pre {
+      background: #000;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      color: #a7f3d0;
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+    .code-comment {
+      color: #6b7280;
+    }
+    footer {
+      max-width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge">Standard: McKinsey 8th Ed (2025) & Damodaran</div>
+    <h1>Enterprise Valuation Engine</h1>
+    <p class="subtitle">
+      The authoritative, mathematically verified valuation architecture implementing McKinsey & Company's 
+      <em>"Valuation: Measuring and Managing the Value of Companies"</em>, Damodaran Investment Valuation, M&amp;A Synergies, and UNIDO project finance.
+    </p>
+    <div class="cta-buttons">
+      <a href="https://github.com/peymanvh/Enterprise-Valuation-Engine" class="btn btn-primary">⭐️ View on GitHub</a>
+      <a href="https://github.com/peymanvh/Enterprise-Valuation-Engine/blob/main/README.md" class="btn btn-secondary">📖 Read Documentation</a>
+    </div>
+  </header>
+
+  <main>
+    <h2 style="font-size: 1.75rem; margin-bottom: 1.5rem; text-align: center;">Institutional Valuation Pillars</h2>
+
+    <div class="grid">
+      <div class="card">
+        <span class="tag">Corporate Enterprise</span>
+        <h3>McKinsey 8th Ed. DCF</h3>
+        <p>Key Value Driver equation, NOPAT adjustments, Invested Capital reconciliation, ROIC trees, Economic Profit (EVA), and Mid-Year discounting.</p>
+        <code>dcf_mckinsey.py</code>
+      </div>
+
+      <div class="card">
+        <span class="tag">M&amp;A &amp; Acquired Assets</span>
+        <h3>M&amp;A &amp; Synergy Valuation</h3>
+        <p>Risk-phased cost/revenue synergies, walk-away offer pricing, winner's curse audit, and IFRS 3 / ASC 805 Purchase Price Allocation (PPA).</p>
+        <code>mna_deal_valuation.py</code>
+      </div>
+
+      <div class="card">
+        <span class="tag">Tech &amp; AI Economics</span>
+        <h3>AI Asset &amp; Token Economics</h3>
+        <p>Token gross margins, inference COGS, accelerated 3-year GPU depreciation drag, and macro high-interest debt rollover stress test.</p>
+        <code>ai_tech_valuation.py</code>
+      </div>
+
+      <div class="card">
+        <span class="tag">Venture Capital</span>
+        <h3>Startup &amp; SaaS Economics</h3>
+        <p>Venture Capital (VC) method, Bill Payne Scorecard, Dave Berkus model, First Chicago scenarios, and SaaS health audit (LTV/CAC, Payback, Rule of 40).</p>
+        <code>startup_venture.py</code>
+      </div>
+
+      <div class="card">
+        <span class="tag">Project Finance</span>
+        <h3>UNIDO Trade Feasibility</h3>
+        <p>Dynamic Cash Conversion Cycle (CCC), CFADS, DSCR covenants with lender cash sweep and mandatory dividend lockup enforcement.</p>
+        <code>commercial_project.py</code>
+      </div>
+
+      <div class="card">
+        <span class="tag">Intellectual Property</span>
+        <h3>Patents &amp; Real Options</h3>
+        <p>Relief-from-Royalty with Tax Amortization Benefits (TAB), MPEEM contributory asset charges, and Black-Scholes patent real options.</p>
+        <code>ip_patent_val.py</code>
+      </div>
+    </div>
+
+    <h2 style="font-size: 1.75rem; margin-bottom: 1rem;">Quickstart Command Line Execution</h2>
+    <pre><code><span class="code-comment"># 1. Corporate DCF Valuation (McKinsey Key Value Driver + Buffett Owner Earnings)</span>
+python skills/enterprise-valuation/scripts/dcf_mckinsey.py --input models/sample_corporate_dcf.json --format markdown
+
+<span class="code-comment"># 2. M&amp;A Deal Structuring, Synergies &amp; Purchase Price Allocation</span>
+python skills/enterprise-valuation/scripts/mna_deal_valuation.py --input models/sample_mna_deal.json --format markdown
+
+<span class="code-comment"># 3. AI Asset Valuation &amp; Debt Refinancing Stress Test</span>
+python skills/enterprise-valuation/scripts/ai_tech_valuation.py --input models/sample_ai_enterprise.json --format markdown</code></pre>
+  </main>
+
+  <footer>
+    <p>Open Source Project released under MIT License | Created by <a href="https://github.com/peymanvh">peymanvh</a></p>
+    <p style="margin-top: 0.5rem; font-size: 0.8rem;">Reference: McKinsey &amp; Company <em>"Valuation: Measuring and Managing the Value of Companies"</em> (Tim Koller, Marc Goedhart, David Wessels)</p>
+  </footer>
+
+</body>
+</html>
