@@ -1,0 +1,27 @@
+{
+  "company_name": "CognitiveAI Enterprise Corp",
+  "annual_revenues": [100000000.0, 160000000.0, 240000000.0, 340000000.0, 450000000.0],
+  "traditional_capex_pct": 0.04,
+  "ai_compute_capex_pct": 0.15,
+  "traditional_useful_life_years": 7,
+  "ai_compute_useful_life_years": 3,
+  "reverse_dcf_params": {
+    "current_enterprise_value": 1500000000.0,
+    "current_revenue": 100000000.0,
+    "target_tam": 25000000000.0,
+    "target_year": 5,
+    "terminal_operating_margin": 0.28,
+    "terminal_roic": 0.25,
+    "wacc": 0.105,
+    "terminal_growth": 0.035,
+    "corporate_tax_rate": 0.25
+  },
+  "high_rate_macro": {
+    "risk_free_rate": 0.045,
+    "equity_risk_premium": 0.055,
+    "unlevered_beta": 1.15,
+    "pre_tax_cost_of_debt": 0.075,
+    "corporate_tax_rate": 0.25,
+    "target_debt_to_capital": 0.20
+  }
+}

@@ -22,6 +22,11 @@ from ip_patent_val import IPPatentValuationEngine, black_scholes_call, norm_cdf
 from monte_carlo_simulator import MonteCarloValuationSimulator, percentile
 from mna_deal_valuation import MNADealValuationEngine
 from ai_tech_valuation import AITechValuationEngine
+from ai_tech_growth_dcf import (
+    calculate_ai_capex_and_depreciation,
+    reverse_dcf_high_growth,
+    dynamic_wacc_high_rate_environment
+)
 
 class TestMcKinseyDCFEngine(unittest.TestCase):
     def setUp(self):
@@ -345,6 +350,53 @@ class TestAITechValuation(unittest.TestCase):
         self.assertAlmostEqual(roll["post_rollover_annual_interest"], 6.0, places=2)
         self.assertAlmostEqual(roll["incremental_annual_cash_drain"], 3.0, places=2)
         self.assertAlmostEqual(roll["post_rollover_interest_coverage_ratio"], 20.0 / 6.0, places=3)
+
+class TestAITechGrowthDCF(unittest.TestCase):
+    def test_accelerated_ai_capex_depreciation(self):
+        res = calculate_ai_capex_and_depreciation(
+            annual_revenues=[100.0, 200.0],
+            traditional_capex_pct=0.05,
+            ai_compute_capex_pct=0.15,
+            traditional_useful_life_years=5,
+            ai_compute_useful_life_years=2
+        )
+        # Year 1: Trad capex = 5, AI capex = 15. Total = 20
+        # Trad depr = 5 / 5 = 1, AI depr = 15 / 2 = 7.5. Total depr = 8.5
+        sched = res["annual_schedule"][0]
+        self.assertEqual(sched["total_capex"], 20.0)
+        self.assertEqual(sched["traditional_depreciation"], 1.0)
+        self.assertEqual(sched["ai_accelerated_depreciation"], 7.5)
+        self.assertEqual(sched["total_depreciation"], 8.5)
+
+    def test_reverse_dcf(self):
+        rdcf = reverse_dcf_high_growth(
+            current_enterprise_value=1000.0,
+            current_revenue=100.0,
+            target_tam=10000.0,
+            target_year=5,
+            terminal_operating_margin=0.25,
+            terminal_roic=0.20,
+            wacc=0.10,
+            terminal_growth=0.03,
+            corporate_tax_rate=0.25
+        )
+        miles = rdcf["implied_milestones_at_target_year"]
+        self.assertGreater(miles["required_target_revenue"], 100.0)
+        self.assertIn("implied_revenue_cagr", miles)
+        self.assertIn("feasibility_assessment", miles)
+
+    def test_dynamic_wacc(self):
+        w_res = dynamic_wacc_high_rate_environment(
+            risk_free_rate=0.045,
+            equity_risk_premium=0.055,
+            unlevered_beta=1.0,
+            pre_tax_cost_of_debt=0.07,
+            corporate_tax_rate=0.25,
+            target_debt_to_capital=0.30
+        )
+        self.assertGreater(w_res["hurdle_rates"]["calculated_wacc"], 0.045)
+        self.assertEqual(w_res["capital_structure"]["debt_weight"], 0.30)
+        self.assertAlmostEqual(w_res["capital_structure"]["equity_weight"], 0.70, places=4)
 
 if __name__ == "__main__":
     unittest.main()

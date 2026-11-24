@@ -12,6 +12,7 @@ from ma_synergy_valuation import calculate_ma_synergy
 from private_dlom_dloc import calculate_dloc, chaffe_put_option_dlom, calculate_levels_of_value
 from distressed_asset_liquidation import calculate_liquidation_value
 from accretion_dilution import calculate_accretion_dilution
+from purchase_price_allocation import calculate_purchase_price_allocation
 
 class TestMAValuation(unittest.TestCase):
 
@@ -98,6 +99,39 @@ class TestMAValuation(unittest.TestCase):
         self.assertEqual(res["standalone_acquirer"]["standalone_eps"], 2.0)
         self.assertIn("deal_classification", res["pro_forma_results"])
         self.assertIn(res["pro_forma_results"]["deal_classification"], ["Accretive", "Dilutive", "Neutral"])
+
+    def test_purchase_price_allocation(self):
+        ppa = calculate_purchase_price_allocation(
+            cash_paid=60.0,
+            stock_value_transferred=40.0,
+            debt_assumed=10.0,
+            contingent_earnout_fair_value=5.0,
+            book_value_tangible_assets=50.0,
+            fair_value_step_up_tangibles=10.0,
+            book_value_liabilities_assumed=15.0,
+            identified_intangibles={
+                "tech_software": 20.0,
+                "customer_relationships": 10.0
+            },
+            marginal_tax_rate=0.25,
+            transaction_structure_is_asset_deal=False
+        )
+        # Consideration = 60 + 40 + 5 = 105
+        self.assertEqual(ppa["consideration_summary"]["total_purchase_consideration"], 105.0)
+        
+        # Step up = 10 + 30 = 40. DTL = 40 * 0.25 = 10.0
+        bal = ppa["balance_sheet_allocation"]
+        self.assertEqual(bal["deferred_tax_liability_dtl"], 10.0)
+        
+        # Gross assets = (50 + 10) + 30 = 90
+        # Liabilities = 15 + 10 + 10(DTL) = 35
+        # Net Identifiable Assets = 90 - 35 = 55
+        self.assertEqual(bal["net_identifiable_assets_acquired"], 55.0)
+        
+        # Goodwill = 105 - 55 = 50
+        gw = ppa["goodwill_result"]
+        self.assertEqual(gw["recorded_goodwill"], 50.0)
+        self.assertEqual(gw["bargain_purchase_gain"], 0.0)
 
 if __name__ == "__main__":
     unittest.main()

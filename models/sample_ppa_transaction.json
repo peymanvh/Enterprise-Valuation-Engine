@@ -1,0 +1,18 @@
+{
+  "target_company": "Apex Micro-Robotics Ltd",
+  "cash_paid": 60000000.0,
+  "stock_value_transferred": 35000000.0,
+  "debt_assumed": 12000000.0,
+  "contingent_earnout_fair_value": 8000000.0,
+  "book_value_tangible_assets": 45000000.0,
+  "fair_value_step_up_tangibles": 8000000.0,
+  "book_value_liabilities_assumed": 14000000.0,
+  "identified_intangibles": {
+    "developed_software_technology": 18000000.0,
+    "customer_contracts_relationships": 12000000.0,
+    "trademark_and_brand": 5000000.0,
+    "patents_and_algorithms": 7000000.0
+  },
+  "marginal_tax_rate": 0.25,
+  "transaction_structure_is_asset_deal": false
+}
